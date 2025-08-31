@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Standards-Based Learning Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles/dashboard.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Standards-Based Learning Dashboard</h1>
+    
+    <div class="calendar-container">
+      <h2>Attendance Calendar</h2>
+      <div id="calendar"></div>
+    </div>
+
+    <div class="qr-code-container">
+      <h2>Class QR Codes</h2>
+      <div id="qrCodes"></div>
+    </div>
+
+    <div class="attendance-status">
+      <h2>Confirm Attendance</h2>
+      <div id="attendanceConfirmation"></div>
+    </div>
+    
+    <button class="btn logout-btn" id="logoutBtn">Log Out</button>
+  </div>
+
+  <script src="calendar.js"></script>
+  <script src="qr-code.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeCalendar();
+      generateQRCodes();
+    });
+  </script>
+</body>
+</html>

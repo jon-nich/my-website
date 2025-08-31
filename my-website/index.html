@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eng1030 - Academic & Professional Writing</title>
+        <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext y='14' font-size='14'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E" />
+        <script src="./config.js?v=1"></script>
+        <style>
+                        :root { --bg:#0b1020; --panel:#0e1430; --card:#11162a; --muted:#9aa4b2; --text:#e6eaf2; --accent:#7c3aed; --accent2:#667eea; --border:#23304d; }
+                        * { box-sizing: border-box; }
+                        html, body { height: 100%; }
+                        body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:radial-gradient(120% 120% at 80% 10%, #0e1530 0%, #0b1020 60%) fixed; color:var(--text); overflow-x:hidden; }
+                        /* Titles as white chips for contrast */
+                        .card h2 { margin:0 0 6px; font-size:16px; display:inline-block; background:#ffffff; color:#0e0f14; padding:6px 10px; border-radius:10px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+            /* WebGL smoke canvas */
+            #smoke-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; display:block; }
+
+                        .container { max-width: 1100px; margin: 0 auto; padding: 22px 16px 28px; }
+                        .header { background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02)); border:1px solid var(--border); border-radius: 14px; padding: 24px; text-align:center; backdrop-filter: blur(6px); margin-bottom: 16px; }
+                        .header h1 { margin: 0 0 6px; font-size: clamp(22px, 3vw, 34px); letter-spacing:.2px; }
+                        .header p { margin:0; color:var(--muted); }
+                        .content { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+                        @media (max-width: 900px) { .content { grid-template-columns: 1fr; } }
+                        .card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid var(--border); border-radius:14px; padding:18px; backdrop-filter: blur(6px); }
+                        .form-group { margin-bottom: 12px; }
+                        .form-group label { display:block; font-weight:600; margin-bottom:6px; color:var(--text); }
+                        .form-group input, .form-group select { width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px; font-size:16px; background:#0c1228; color:var(--text); }
+                        .form-group input::placeholder { color:#91a0bd; }
+                        .form-group input:focus, .form-group select:focus { outline:none; border-color:#5b21b6; box-shadow:0 0 0 3px rgba(124,58,237,.15); }
+                        .btn { width:100%; background: rgba(124,58,237,.18); color:var(--text); border:1px solid #5b21b6; padding:11px 14px; border-radius:10px; font-weight:700; cursor:pointer; }
+                        .btn:hover { background: rgba(124,58,237,.28); }
+                        .link-btn { background:none;border:none;color:var(--accent2);text-decoration:underline;cursor:pointer; }
+                        .hidden { display:none !important; }
+                        .alert { padding:10px 12px; border-radius:8px; margin-bottom:10px; font-size:14px; }
+                        .alert-success { background: rgba(16,185,129,.15); color:#a7f3d0; border:1px solid #065f46; }
+                        .alert-error { background: rgba(239,68,68,.15); color:#fecaca; border:1px solid #7f1d1d; }
+                        .muted { color: var(--muted); }
+                </style>
+    </head>
+    <body>
+    <canvas id="smoke-canvas" aria-hidden="true"></canvas>
+    <div class="container">
+            <div class="header">
+        <h1>Eng1030 - Academic & Professional Writing</h1>
+        <p>Course sign up and login</p>
+            </div>
+
+            <div class="content">
+                <div class="card">
+                    <h2 style="margin-bottom: 12px;">Sign up or Login</h2>
+                    <div id="alertContainer"></div>
+                    <form id="registrationForm">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" required placeholder="your.email@school.edu" />
+                        </div>
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" required placeholder="Enter your full name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" required minlength="6" placeholder="Create a secure password" />
+                        </div>
+                        <div class="form-group">
+                            <label for="section">Section (5 / 6 / 7)</label>
+                            <select id="section" required>
+                                <option value="">Choose…</option>
+                                <option value="Section 5">5</option>
+                                <option value="Section 6">6</option>
+                                <option value="Section 7">7</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn" id="registerBtn">Register</button>
+                    </form>
+
+                    <form id="loginForm" class="hidden" style="margin-top:12px;">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" required />
+                        </div>
+                        <button type="submit" class="btn" id="loginBtn">Login</button>
+                        <div id="loginHelp" class="muted" style="margin-top:8px; display:none;">If you just signed up, please confirm your email before logging in.</div>
+                        <div style="margin-top:6px; display:flex; gap:8px; align-items:center;">
+                            <button type="button" id="resendBtn" class="link-btn" style="display:none;">Resend confirmation email</button>
+                            <button type="button" id="forgotBtn" class="link-btn">Forgot password?</button>
+                        </div>
+                    </form>
+
+                    <div style="text-align:center;margin-top: 10px;">
+                        <button id="toggleForm" class="link-btn">Already have an account? Login here</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 style="margin-bottom: 6px;">About</h2>
+                    <p class="muted">On success, you’ll be taken to the dashboard. The dashboard shows your profile and a sign-out button.</p>
+                </div>
+            </div>
+        </div>
+    <script>
+            // High-fidelity purple/blue smoke using WebGL fbm noise (fallback to hide if WebGL unavailable)
+            (function() {
+                const canvas = document.getElementById('smoke-canvas');
+                if (!canvas) return;
+                const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true, depth: false, stencil: false });
+                if (!gl) { canvas.style.display = 'none'; return; }
+
+                const vertSrc = `
+                attribute vec2 position;
+                void main(){
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }`;
+                                const fragSrc = `
+                                precision highp float;
+                                uniform vec2 u_res; uniform float u_time;
+                                float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453123); }
+                                float noise(vec2 p){ vec2 i=floor(p), f=fract(p); float a=hash(i), b=hash(i+vec2(1,0)), c=hash(i+vec2(0,1)), d=hash(i+vec2(1,1)); vec2 u=f*f*(3.-2.*f); return mix(a,b,u.x)+(c-a)*u.y*(1.-u.x)+(d-b)*u.x*u.y; }
+                                float fbm(vec2 p){ float v=0., a=.5; mat2 m=mat2(1.6,1.2,-1.2,1.6); for(int i=0;i<5;i++){ v+=a*noise(p); p=m*p*1.2; a*=.5; } return v; }
+
+                                void main(){
+                                    vec2 p = (gl_FragCoord.xy - 0.5 * u_res.xy) / min(u_res.x, u_res.y);
+                                    float t = u_time;
+                                    // Peripheral drift: radial + tangential
+                                    float r = length(p);
+                                    vec2 tang = vec2(-p.y, p.x);
+                                    float rim = smoothstep(0.35, 1.2, r);
+                                      p += p * (0.08 * rim) * sin(t * 0.12);
+                                      p += tang * (0.06 * rim) * cos(t * 0.10);
+
+                                    // Layer A (coarse)
+                                      float n1 = fbm(p * 1.6 - vec2(t*0.45, t*0.20));
+                                    vec2 warpA = vec2(
+                                                            fbm(p * 2.6 + n1 * 1.2 + vec2(4.2, 1.3) + t*0.22),
+                                                            fbm(p * 2.6 + n1 * 1.2 + vec2(1.7, 3.4) - t*0.19)
+                                    );
+                                                        float fA = fbm(p * 2.0 + warpA * 1.5 - vec2(t*0.35, -t*0.30));
+
+                                    // Layer B (fine + parallax)
+                                    vec2 parallax = (gl_FragCoord.xy/u_res.xy - 0.5) * 0.04;
+                                    vec2 pB = p + parallax;
+                                                        float n2 = fbm(pB * 3.4 + vec2(t*0.30, -t*0.25));
+                                    vec2 warpB = vec2(
+                                                            fbm(pB * 3.6 + n2 * 1.3 + vec2(2.1, 3.7) + t*0.40),
+                                                            fbm(pB * 3.6 + n2 * 1.3 + vec2(3.5, 0.9) - t*0.35)
+                                    );
+                                                        float fB = fbm(pB * 4.2 + warpB * 1.9 + vec2(-t*0.55, t*0.45));
+
+                                    float f = mix(fA, fB, 0.45);
+                                    f = pow(clamp(f, 0.0, 1.0), 0.85);
+
+                                    // Color pulsing
+                                    vec3 c2 = vec3(0.30, 0.18, 0.60);
+                                    vec3 c3 = vec3(0.26, 0.34, 0.88);
+                                    vec3 c4 = vec3(0.58, 0.24, 0.82);
+                                      float pulse = 0.5 + 0.5 * sin(t * 0.15);
+                                    vec3 col = mix(vec3(0.10,0.06,0.22), c2, smoothstep(0.15, 0.85, f));
+                                    col = mix(col, mix(c3, c4, 0.25*pulse), smoothstep(0.4, 0.9, f + n1*0.25));
+                                    col = mix(col, c4, smoothstep(0.3, 0.7, fB));
+                                    col = mix(col, col * (1.0 + 0.12 * pulse), 0.5);
+
+                                    // Rim light for punch
+                                    float rimGlow = smoothstep(0.35, 0.95, r) * (0.25 + 0.15 * pulse);
+                                    col += rimGlow * vec3(0.32, 0.24, 0.56);
+
+                                    // Vignette and alpha
+                                    float vign = smoothstep(1.2, 0.2, r*0.95);
+                                    float alpha = smoothstep(0.2, 0.95, f) * 0.8;
+                                    col = clamp((col - 0.5) * 1.2 + 0.5, 0.0, 1.0);
+                                    col *= vign;
+                                    gl_FragColor = vec4(col, alpha);
+                                }`;
+
+                function compile(type, src){
+                    const sh = gl.createShader(type);
+                    gl.shaderSource(sh, src);
+                    gl.compileShader(sh);
+                    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+                        console.warn('Shader compile error:', gl.getShaderInfoLog(sh));
+                        return null;
+                    }
+                    return sh;
+                }
+                const vs = compile(gl.VERTEX_SHADER, vertSrc);
+                const fs = compile(gl.FRAGMENT_SHADER, fragSrc);
+                if (!vs || !fs) { canvas.style.display='none'; return; }
+                const prog = gl.createProgram();
+                gl.attachShader(prog, vs);
+                gl.attachShader(prog, fs);
+                gl.linkProgram(prog);
+                if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.warn('Program link error:', gl.getProgramInfoLog(prog)); canvas.style.display='none'; return; }
+                gl.useProgram(prog);
+
+                const quad = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+                const verts = new Float32Array([ -1, -1,  1, -1,  -1, 1,  1, 1 ]);
+                gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+                const posLoc = gl.getAttribLocation(prog, 'position');
+                gl.enableVertexAttribArray(posLoc);
+                gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+                const uRes = gl.getUniformLocation(prog, 'u_res');
+                const uTime = gl.getUniformLocation(prog, 'u_time');
+
+                gl.disable(gl.DEPTH_TEST);
+                gl.disable(gl.STENCIL_TEST);
+                gl.enable(gl.BLEND);
+                gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+                // Adaptive resolution for performance (mobile/low-end devices)
+                const dm = (navigator.deviceMemory != null) ? navigator.deviceMemory : 4;
+                const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+                const START_CAP = (dm <= 4 || isMobile) ? 1.25 : 1.75;
+                let dprTarget = Math.min(window.devicePixelRatio || 1, START_CAP);
+
+                function resize(){
+                    const dpr = dprTarget;
+                    const w = Math.floor(window.innerWidth * dpr);
+                    const h = Math.floor(window.innerHeight * dpr);
+                    if (canvas.width !== w || canvas.height !== h){
+                        canvas.width = w; canvas.height = h;
+                    }
+                    gl.viewport(0, 0, canvas.width, canvas.height);
+                    gl.uniform2f(uRes, canvas.width, canvas.height);
+                }
+                window.addEventListener('resize', resize);
+                resize();
+
+                let start = performance.now();
+                let last = start;
+                const fpsWindow = [];
+                function frame(){
+                    const now = performance.now();
+                    const dt = now - last;
+                    last = now;
+                    const fps = 1000 / Math.max(1, dt);
+                    fpsWindow.push(fps);
+                    if (fpsWindow.length > 60) fpsWindow.shift();
+                    if (fpsWindow.length === 60) {
+                        let avg = 0; for (let i = 0; i < fpsWindow.length; i++) avg += fpsWindow[i]; avg /= fpsWindow.length;
+                        // Adjust DPR target gradually to maintain ~55-60fps
+                        if (avg < 50 && dprTarget > 1.0) { dprTarget = Math.max(1.0, +(dprTarget - 0.1).toFixed(2)); resize(); fpsWindow.length = 0; }
+                        else if (avg > 58 && dprTarget < START_CAP) { dprTarget = Math.min(START_CAP, +(dprTarget + 0.1).toFixed(2)); resize(); fpsWindow.length = 0; }
+                    }
+                    const t = (now - start) / 1000;
+                    gl.clearColor(0, 0, 0, 0);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                    gl.uniform1f(uTime, t);
+                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                    requestAnimationFrame(frame);
+                }
+                requestAnimationFrame(frame);
+            })();
+        </script>
+        <script type="module">
+            import { getSupabase } from './app.js';
+            const alertContainer = document.getElementById('alertContainer');
+            function showAlert(type, msg) {
+                const cls = type === 'success' ? 'alert-success' : 'alert-error';
+                alertContainer.innerHTML = `<div class="alert ${cls}">${msg}</div>`;
+            }
+            const registrationForm = document.getElementById('registrationForm');
+            const loginForm = document.getElementById('loginForm');
+            const toggleFormBtn = document.getElementById('toggleForm');
+            const loginHelp = document.getElementById('loginHelp');
+            const resendBtn = document.getElementById('resendBtn');
+            const forgotBtn = document.getElementById('forgotBtn');
+            function updateToggleText() {
+                toggleFormBtn.textContent = registrationForm.classList.contains('hidden')
+                    ? 'Need an account? Register here'
+                    : 'Already have an account? Login here';
+            }
+            updateToggleText();
+            toggleFormBtn.addEventListener('click', () => {
+                registrationForm.classList.toggle('hidden');
+                loginForm.classList.toggle('hidden');
+                updateToggleText();
+            });
+
+            let supabase;
+                    try {
+                        supabase = getSupabase();
+                    } catch (e) {
+                showAlert('error', e.message || 'Missing Supabase config');
+                document.getElementById('registerBtn').disabled = true;
+                document.getElementById('loginBtn').disabled = true;
+                // Stop further JS
+                throw e;
+            }
+
+                    // If already signed in, go straight to dashboard
+                    const { data: sessionData } = await supabase.auth.getSession();
+                    if (sessionData?.session) {
+                        location.href = 'dashboard.html';
+                    }
+
+            registrationForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const fullName = document.getElementById('fullName').value;
+                const password = document.getElementById('password').value;
+                const section = document.getElementById('section').value; // stores values like 'Section 5'
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: { full_name: fullName, section },
+                        emailRedirectTo: `${location.origin}/index.html`
+                    }
+                });
+                if (error) return showAlert('error', 'Registration failed: ' + (error.message || 'Unknown error'));
+                const sessionUser = data?.session?.user || null;
+                const newUser = data?.user || null;
+                if (sessionUser && newUser) {
+                    try { await supabase.from('students').upsert({ id: newUser.id, email, full_name: fullName, section }, { onConflict: 'id' }); } catch {}
+                    location.href = 'dashboard.html';
+                    return;
+                }
+                // Most projects require email confirmation before password login works
+                showAlert('success', 'Account created. Check your email to confirm, then log in.');
+                registrationForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                document.getElementById('loginEmail').value = email;
+                loginHelp.style.display = '';
+                resendBtn.style.display = '';
+            });
+
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) {
+                    const msg = (error.message || '').toLowerCase();
+                    const needsConfirm = msg.includes('email') || msg.includes('confirm') || msg.includes('invalid login');
+                    showAlert('error', 'Login failed: ' + (error.message || 'Unknown error'));
+                    if (needsConfirm) {
+                        loginHelp.style.display = '';
+                        resendBtn.style.display = '';
+                    }
+                    return;
+                }
+                // Ensure profile exists
+                const userId = data?.user?.id;
+                try {
+                    const existing = await supabase.from('students').select('id').eq('id', userId).limit(1);
+                    if (!existing?.data?.length) {
+                        const meta = (data?.user?.user_metadata) || {};
+                        const fullNameFallback = meta.full_name || email.split('@')[0];
+                        const sec = meta.section || document.getElementById('section')?.value || 'Section 5';
+                        await supabase.from('students').insert([{ id: userId, email, full_name: fullNameFallback, section: sec }]);
+                    }
+                } catch {}
+                location.href = 'dashboard.html';
+            });
+
+            // Resend confirmation email for the current email input
+            resendBtn?.addEventListener('click', async () => {
+                const email = document.getElementById('loginEmail').value || document.getElementById('email').value;
+                if (!email) { showAlert('error', 'Enter your email first.'); return; }
+                try {
+                    const { error } = await supabase.auth.resend({ type: 'signup', email });
+                    if (error) throw error;
+                    showAlert('success', 'Confirmation email sent. Check your inbox/spam.');
+                } catch (e) {
+                    showAlert('error', 'Could not resend email: ' + (e.message || 'Unknown error'));
+                }
+            });
+
+            // Password reset flow (email link)
+            forgotBtn?.addEventListener('click', async () => {
+                const email = document.getElementById('loginEmail').value || document.getElementById('email').value;
+                if (!email) { showAlert('error', 'Enter your email first.'); return; }
+                try {
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${location.origin}/index.html` });
+                    if (error) throw error;
+                    showAlert('success', 'Password reset email sent. Check your inbox.');
+                } catch (e) {
+                    showAlert('error', 'Could not send reset email: ' + (e.message || 'Unknown error'));
+                }
+            });
+        </script>
+    </body>
+</html>

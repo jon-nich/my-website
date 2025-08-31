@@ -1,0 +1,13 @@
+# Minimal Netlify config for a static site at repo root
+[build]
+  # Directory to publish; adjust if you use a subfolder build
+  publish = "."
+  # Build step to generate config.js from environment variables for Git auto-deploys
+  # Requires SUPABASE_URL and SUPABASE_ANON_KEY set in Site settings > Environment variables
+  command = "node tools/generate-config.mjs"
+
+# Redirect all unknown routes to index.html for SPA-style routing (existing files still served normally)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
