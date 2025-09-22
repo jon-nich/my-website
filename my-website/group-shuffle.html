@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Shuffler</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 8px;
+            height: 100vh;
+            overflow: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 1.5em;
+            margin: 8px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 15px;
+            padding: 5px;
+            height: 75vh;
+        }
+
+        .group {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .group-title {
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 6px;
+            padding: 6px;
+            border-radius: 6px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+
+        .group1 .group-title { background: linear-gradient(45deg, #ff6b6b, #ee5a24); }
+        .group2 .group-title { background: linear-gradient(45deg, #4ecdc4, #44a08d); }
+        .group3 .group-title { background: linear-gradient(45deg, #45b7d1, #3867d6); }
+        .group4 .group-title { background: linear-gradient(45deg, #96ceb4, #2ecc71); }
+        .group5 .group-title { background: linear-gradient(45deg, #feca57, #ff9ff3); }
+        .group6 .group-title { background: linear-gradient(45deg, #a55eea, #8b5cf6); }
+
+        .student-card {
+            background: #f8f9fa;
+            margin: 2px 0;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border-left: 3px solid;
+            font-weight: 500;
+            font-size: 0.8em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            min-height: 0;
+        }
+
+        .student-card:hover {
+            transform: translateX(5px);
+            background: #e9ecef;
+        }
+
+        .group1 .student-card { border-left-color: #ff6b6b; }
+        .group2 .student-card { border-left-color: #4ecdc4; }
+        .group3 .student-card { border-left-color: #45b7d1; }
+        .group4 .student-card { border-left-color: #96ceb4; }
+        .group5 .student-card { border-left-color: #feca57; }
+        .group6 .student-card { border-left-color: #a55eea; }
+
+        .shuffle-btn {
+            display: block;
+            margin: 5px auto;
+            padding: 6px 12px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .shuffle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        @media (max-width: 768px) {
+            .groups-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
+            h1 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Group Shuffler</h1>
+        <button class="shuffle-btn" onclick="shuffleStudents()">Shuffle Students</button>
+        
+        <div class="groups-container">
+            <div class="group group1">
+                <div class="group-title">Group 1</div>
+                <div class="student-card">Alice Johnson</div>
+                <div class="student-card">Bob Smith</div>
+                <div class="student-card">Carol Davis</div>
+                <div class="student-card">David Wilson</div>
+            </div>
+            
+            <div class="group group2">
+                <div class="group-title">Group 2</div>
+                <div class="student-card">Emma Brown</div>
+                <div class="student-card">Frank Miller</div>
+                <div class="student-card">Grace Lee</div>
+                <div class="student-card">Henry Garcia</div>
+            </div>
+            
+            <div class="group group3">
+                <div class="group-title">Group 3</div>
+                <div class="student-card">Ivy Rodriguez</div>
+                <div class="student-card">Jack Martinez</div>
+                <div class="student-card">Kara Anderson</div>
+                <div class="student-card">Liam Thomas</div>
+            </div>
+            
+            <div class="group group4">
+                <div class="group-title">Group 4</div>
+                <div class="student-card">Maya Jackson</div>
+                <div class="student-card">Noah White</div>
+                <div class="student-card">Olivia Harris</div>
+                <div class="student-card">Paul Martin</div>
+            </div>
+            
+            <div class="group group5">
+                <div class="group-title">Group 5</div>
+                <div class="student-card">Quinn Thompson</div>
+                <div class="student-card">Ryan Garcia</div>
+                <div class="student-card">Sophia Clark</div>
+                <div class="student-card">Tyler Lewis</div>
+            </div>
+            
+            <div class="group group6">
+                <div class="group-title">Group 6</div>
+                <div class="student-card">Uma Walker</div>
+                <div class="student-card">Victor Hall</div>
+                <div class="student-card">Wendy Allen</div>
+                <div class="student-card">Xavier Young</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function shuffleStudents() {
+            // Get all student cards
+            const allStudents = Array.from(document.querySelectorAll('.student-card'));
+            const studentNames = allStudents.map(card => card.textContent);
+            
+            // Shuffle the names array
+            for (let i = studentNames.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [studentNames[i], studentNames[j]] = [studentNames[j], studentNames[i]];
+            }
+            
+            // Redistribute the shuffled names back to the cards
+            allStudents.forEach((card, index) => {
+                card.textContent = studentNames[index];
+            });
+            
+            // Add visual feedback
+            allStudents.forEach(card => {
+                card.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    card.style.transform = 'scale(1)';
+                }, 200);
+            });
+        }
+    </script>
+</body>
+</html>
